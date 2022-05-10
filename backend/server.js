@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/goals', require('./routes/goalRoutes'))
 app.use('/api/users', require('./routes/userRoutes'))
+app.use('/api/character', require('./routes/characterRoutes'))
+app.use('/api/planet', require('./routes/planetRoutes'))
+app.use('/api/film', require('./routes/filmRoutes'))
+app.use('/api/favorite', require('./routes/favoriteRoutes'))
 
 // Serve frontend
 if (process.env.NODE_ENV === 'production') {
