@@ -1,22 +1,22 @@
 import axios from 'axios'
 
-const API_URL = '/api/goals/'
+const API_URL = '/api/favorite/'
 
-// Create new goal
-const createGoal = async (goalData, token) => {
+// Add new favorite character
+const createFavorite = async (favoriteData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
 
-  const response = await axios.post(API_URL, goalData, config)
+  const response = await axios.post(API_URL, favoriteData, config)
 
   return response.data
 }
 
-// Get user goals
-const getGoals = async (token) => {
+// Get list of favorites
+const getFavorites = async (token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -28,8 +28,8 @@ const getGoals = async (token) => {
   return response.data
 }
 
-// Delete user goal
-const deleteGoal = async (goalId, token) => {
+// Delete favorite from list
+const deleteFavorite = async (goalId, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -41,10 +41,10 @@ const deleteGoal = async (goalId, token) => {
   return response.data
 }
 
-const goalService = {
-  createGoal,
-  getGoals,
-  deleteGoal,
+const favoriteService = {
+  createFavorite,
+  getFavorites,
+  deleteFavorite,
 }
 
-export default goalService
+export default favoriteService
