@@ -1,12 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '../features/auth/authSlice'
-import favoriteReducer from '../features/favorites/favoriteSlice'
-import characterReducer from '../features/characters/characterSlice'
+import favoriteReducer from '../features/favorite/favoriteSlice'
+import characterReducer from '../features/character/characterSlice'
+import planetReducer from '../features/planet/planetSlice'
+import filmReducer from '../features/film/filmSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    favorites: favoriteReducer,
+    favorite: favoriteReducer,
     character: characterReducer,
+    planet: planetReducer,
+    film: filmReducer
   },  
 })

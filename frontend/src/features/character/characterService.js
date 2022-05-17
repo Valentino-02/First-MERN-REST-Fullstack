@@ -8,15 +8,18 @@ const getCharacter = async (name, token) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+            name: name
+        },
     }
 
-    const response = await axios.get(API_URL + '?name=' + name, config)
+    const response = await axios.get(API_URL, config)
 
     return response.data
 }
 
 // Get full list of characters
-const getAllCharacters = async (token) => {
+const getCharacters = async (token) => {
     const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -28,12 +31,9 @@ const getAllCharacters = async (token) => {
     return response.data
 }
 
-
-
-const goalService = {
+const characterService = {
     getCharacter,
-    getAllCharacters
-
+    getCharacters
 }
 
-export default goalService
+export default characterService

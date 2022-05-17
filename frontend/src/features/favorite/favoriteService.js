@@ -3,14 +3,14 @@ import axios from 'axios'
 const API_URL = '/api/favorite/'
 
 // Add new favorite character
-const createFavorite = async (favoriteData, token) => {
+const createFavorite = async (name, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
 
-  const response = await axios.post(API_URL, favoriteData, config)
+  const response = await axios.post(API_URL, name, config)
 
   return response.data
 }
@@ -29,14 +29,14 @@ const getFavorites = async (token) => {
 }
 
 // Delete favorite from list
-const deleteFavorite = async (goalId, token) => {
+const deleteFavorite = async (id, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
 
-  const response = await axios.delete(API_URL + goalId, config)
+  const response = await axios.delete(API_URL + id, config)
 
   return response.data
 }

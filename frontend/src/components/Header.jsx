@@ -5,48 +5,48 @@ import {logout, reset} from '../features/auth/authSlice'
 
 
 function Header() {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const {user} = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.auth)
 
-    const onLogout = () => {
-        dispatch(logout())
-        dispatch(reset())
-        navigate('/')
-    }
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate('/')
+  }
 
   return (
     <header className='header'>
-        <div className='logo'>
-            <Link to='/search'>Search Character</Link>
-        </div>
-        <div>
+      {user ? (
+        <>
+          <div>
+           <Link to='/character'>Search Character</Link>
+          </div>
+          <div>
             <Link to='/favorite'>Favorites</Link>
-        </div>
+          </div>
+          <div>
+            <p>{user.name} </p>
+            <button className='btn' onClick={onLogout}>
+              <FaSignOutAlt /> Logout
+            </button>
+          </div>
+        </>
+      ) : (
         <ul>
-            {user ? (
-                <li>
-                    <button className='btn' onClick={onLogout}>
-                        <FaSignOutAlt /> Logout
-                    </button>
-                </li>
-            ) : (
-                <>
-                    <li>
-                        <Link to='/login'>
-                            <FaSignInAlt /> Login
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/register'>
-                            <FaUser /> Register
-                        </Link>
-                    </li>   
-                </>
-            )}
-       
+          <li>
+            <Link to='/login'>
+              <FaSignInAlt /> Login
+            </Link>
+          </li>
+          <li>
+            <Link to='/register'>
+              <FaUser /> Register
+            </Link>
+          </li>   
         </ul>
-    </header>
+      )}
+  </header>
   )
 }
 

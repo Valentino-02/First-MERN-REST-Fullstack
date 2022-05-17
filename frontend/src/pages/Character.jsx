@@ -1,48 +1,95 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import SearchCharacter from '../components/SearchCharacter'
+import CharacterSearch from '../components/CharacterSearch'
 import Spinner from '../components/Spinner'
-import { getFavorites, reset } from '../features/favorites/favoriteSlice'
+import { characterReset, getCharacters } from '../features/character/characterSlice'
+import { planetReset } from '../features/planet/planetSlice'
+import { filmReset, setFilm } from '../features/film/filmSlice'
 
 function Character() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { user } = useSelector((state) => state.auth)
-  const { favorites, isLoading, isError, message } = useSelector(
-    (state) => state.favorites
+  const { user } = useSelector(
+    (state) => state.auth
+  )
+  const { planet, planetIsLoading } = useSelector(
+    (state) => state.planet
+  )
+  const { films, filmIsLoading, } = useSelector(
+    (state) => state.film
+  )
+  const { character, characterIsLoading, characterIsError, characterMessage } = useSelector(
+    (state) => state.character
   )
 
-  useEffect(() => {
-    if (isError) {
-      console.log(message)
-    }
+  const onClickFilm = (e, film) => {
+    e.preventDefault()
+    dispatch(setFilm(film))
+    navigate('/film')
+  }
 
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
+
+  useEffect(() => {
     if (!user) {
       navigate('/login')
     }
+  }, [user, navigate])
 
-    dispatch(getFavorites())
+  useEffect(() => {
+    dispatch(characterReset())
+    dispatch(filmReset())
+    dispatch(planetReset())
+  }, [dispatch])
 
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch])
+  useEffect(() => {
+    dispatch(getCharacters())
+  }, [dispatch])
 
-  if (isLoading) {
+  if (characterIsLoading || planetIsLoading || filmIsLoading) {
     return <Spinner />
   }
 
   return (
     <>
       <section className='heading'>
-        <h1>Welcome {user && user.name}</h1>
-        <p>Character Searcher</p>
+        <h1>Character Searcher</h1>
       </section>
 
-      <SearchCharacter />
+      <CharacterSearch />
 
+      <section className='data'>
+        {characterIsError ? (
+          <p>{characterMessage}</p>
+        ) : (
+          <div>
+            <h2>{character.name}</h2>
+            <br></br>
+            <h1> 
+              {!isEmpty(planet) ? (
+                <Link to='/planet'>Planet: {planet.name}</Link>
+              ) : (
+              <></>
+              )}
+            </h1>
+            <br></br>
+            {films.length > 0 ? (
+              <h4>List of Films:</h4>
+            ) : (
+              <></>
+            )}
+            <div> 
+              {films.map((film) => (
+              <button className='btn' onClick={e => {onClickFilm(e, film)}}>{film.title} </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
     </>
   )
 }

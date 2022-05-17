@@ -29,7 +29,7 @@ const postFavorite = asyncHandler(async (req, res) => {
 })
 
 // @desc    delete a character from favorites
-// @route   DELETE api/favorite
+// @route   DELETE api/favorite/:id
 // @access  Private
 const deleteFavorite = asyncHandler(async (req, res) => {
     const favorite = await Favorite.findById(req.params.id)

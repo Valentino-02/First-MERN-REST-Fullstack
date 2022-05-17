@@ -3,19 +3,20 @@ import favoriteService from './favoriteService'
 
 const initialState = {
   favorites: [],
-  isError: false,
-  isSuccess: false,
-  isLoading: false,
-  message: '',
+  favoriteIsError: false,
+  favoriteIsSuccess: false,
+  favoriteIsLoading: false,
+  favoriteMessage: '',
 }
 
 // Add new favorite character
 export const createFavorite = createAsyncThunk(
-  'favorites/create',
-  async (favoriteData, thunkAPI) => {
+  'favorite/create',
+  async (name, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await favoriteService.createFavorite(favoriteData, token)
+      return await favoriteService.createFavorite(name, token)
+  
     } catch (error) {
       const message =
         (error.response &&
@@ -30,7 +31,7 @@ export const createFavorite = createAsyncThunk(
 
 // Get list of favorites
 export const getFavorites = createAsyncThunk(
-  'favorites/getAll',
+  'favorite/get',
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -49,7 +50,7 @@ export const getFavorites = createAsyncThunk(
 
 // Delete favorite from list
 export const deleteFavorite = createAsyncThunk(
-  'favorites/delete',
+  'favorite/delete',
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -75,45 +76,47 @@ export const favoriteSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createFavorite.pending, (state) => {
-        state.isLoading = true
+        state.favoriteIsLoading = true
       })
       .addCase(createFavorite.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.isSuccess = true
+        state.favoriteIsLoading = false
+        state.favoriteIsSuccess = true
         state.favorites.push(action.payload)
       })
       .addCase(createFavorite.rejected, (state, action) => {
-        state.isLoading = false
-        state.isError = true
-        state.message = action.payload
+        state.favoriteIsLoading = false
+        state.favoriteIsError = true
+        state.favoriteMessage = action.payload
       })
+
       .addCase(getFavorites.pending, (state) => {
-        state.isLoading = true
+        state.favoriteIsLoading = true
       })
       .addCase(getFavorites.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.isSuccess = true
+        state.favoriteIsLoading = false
+        state.favoriteIsSuccess = true
         state.favorites = action.payload
       })
       .addCase(getFavorites.rejected, (state, action) => {
-        state.isLoading = false
-        state.isError = true
-        state.message = action.payload
+        state.favoriteIsLoading = false
+        state.favoriteIsError = true
+        state.favoriteMessage = action.payload
       })
+
       .addCase(deleteFavorite.pending, (state) => {
-        state.isLoading = true
+        state.favoriteIsLoading = true
       })
       .addCase(deleteFavorite.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.isSuccess = true
+        state.favoriteIsLoading = false
+        state.favoriteIsSuccess = true
         state.favorites = state.favorites.filter(
-          (favorite) => favorite._id !== action.payload.id
+          (character) => character._id !== action.payload.id
         )
       })
       .addCase(deleteFavorite.rejected, (state, action) => {
-        state.isLoading = false
-        state.isError = true
-        state.message = action.payload
+        state.favoriteIsLoading = false
+        state.favoriteIsError = true
+        state.favoriteMessage = action.payload
       })
   },
 })

@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { getCharacter } from '../features/characters/characterSlice'
+import { getCharacter } from '../features/character/characterSlice'
+import { getPlanet } from '../features/planet/planetSlice'
+import { getFilms } from '../features/film/filmSlice'
 
-function SearchCharacter() {
+function CharacterSearch() {
   const [text, setText] = useState('')
 
   const dispatch = useDispatch()
@@ -10,7 +12,11 @@ function SearchCharacter() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    dispatch(getCharacter({ text }))
+    dispatch(getCharacter( text ))
+
+    dispatch(getPlanet( text ))
+    dispatch(getFilms( text ))
+
     setText('')
   }
 
@@ -21,8 +27,8 @@ function SearchCharacter() {
           <label htmlFor='text'>Enter name of character</label>
           <input
             type='text'
-            name='text'
-            id='text'
+            name='name'
+            id='name_id'
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -37,4 +43,4 @@ function SearchCharacter() {
   )
 }
 
-export default SearchCharacter
+export default CharacterSearch
