@@ -5,7 +5,7 @@ import FavoriteInput from '../components/FavoriteInput'
 import FavoriteItem from '../components/FavoriteItem'
 import Spinner from '../components/Spinner'
 import { getFavorites, reset } from '../features/favorite/favoriteSlice'
-import { getCharacters } from '../features/character/characterSlice'
+import { getCharacters } from '../features/character/charactersSlice'
 
 function Favorite() {
   const navigate = useNavigate()

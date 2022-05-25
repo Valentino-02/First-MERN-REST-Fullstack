@@ -13,18 +13,21 @@ function Planet() {
     (state) => state.planet
   )
   const { characters } = useSelector(
-    (state) => state.character
+    (state) => state.characters
   )
 
   const getCharactersInPlanet = (planet) => {
     const out = []
-    for (const character of characters) {
-        if (character.homeworld === planet.url) {
-            out.push(character)
+    for (const planetChar of planet.residents){
+      for (const character of characters) {
+        if (planetChar === character.url) {
+          out.push(character)
         }
-    return out  
+      }
     }
-  }
+    return out
+    }
+  
 
   useEffect(() => {
     if (!user) {

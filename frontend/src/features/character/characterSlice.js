@@ -3,7 +3,6 @@ import characterService from './characterService'
 
 const initialState = {
   character: {},
-  characters: [],
   characterIsError: false,
   characterIsSuccess: false,
   characterIsLoading: false,
@@ -29,30 +28,19 @@ export const getCharacter = createAsyncThunk(
     }
 )
 
-// Get all characters
-export const getCharacters = createAsyncThunk(
-  'characters/get',
-  async (_, thunkAPI) => {
-      try {
-          const token = thunkAPI.getState().auth.user.token
-          return await characterService.getCharacters(token)
-      } catch (error) {
-          const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString()
-        return thunkAPI.rejectWithValue(message)
-      }
-  }
-)
 
 export const characterSlice = createSlice({
   name: 'character',
   initialState,
   reducers: {
-    characterReset: (state) => initialState,
+    characterReset: (state) => {
+      state.character= {}
+      state.characterIsError= false
+      state.characterIsSuccess= false
+      state.characterIsLoading= false
+      state.characterMessage= ''
+    },
+    characterSuccessReset: (state) => {state.characterIsSuccess = false}
   },
   extraReducers: (builder) => {
     builder
@@ -69,22 +57,8 @@ export const characterSlice = createSlice({
         state.characterIsError = true
         state.characterMessage = action.payload
       })
-
-      .addCase(getCharacters.pending, (state) => {
-        state.characterIsLoading = true
-      })
-      .addCase(getCharacters.fulfilled, (state, action) => {
-        state.characterIsLoading = false
-        state.characterIsSuccess = true
-        state.characters = action.payload
-      })
-      .addCase(getCharacters.rejected, (state, action) => {
-        state.characterIsLoading = false
-        state.characterIsError = true
-        state.characterMessage = action.payload
-      })
   },
 })
 
-export const { characterReset } = characterSlice.actions
+export const { characterReset, characterSuccessReset } = characterSlice.actions
 export default characterSlice.reducer

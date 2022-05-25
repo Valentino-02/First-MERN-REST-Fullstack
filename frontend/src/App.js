@@ -9,8 +9,23 @@ import Character from './pages/Character'
 import Planet from './pages/Planet'
 import Film from './pages/Film'
 import Intro from './pages/Intro'
+import { useSelector, useDispatch } from 'react-redux'
+import { getCharacters } from './features/character/charactersSlice'
+import { getFilms } from './features/film/filmSlice'
 
+
+// I want to fetch the characters info when the app begins. This works for now, but will have to improve it later.
 function App() {
+  const dispatch = useDispatch()
+
+  const { characters, charactersIsLoading } = useSelector(
+    (state) => state.characters
+  )
+
+  if (characters.length === 0 && !charactersIsLoading) {
+    dispatch(getCharacters())
+  }
+
   return (
     <>
       <Router>

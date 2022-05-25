@@ -1,22 +1,35 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { getCharacter } from '../features/character/characterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { getCharacter, characterReset, characterSuccessReset } from '../features/character/characterSlice'
 import { getPlanet } from '../features/planet/planetSlice'
 import { getFilms } from '../features/film/filmSlice'
 
+
 function CharacterSearch() {
+  const dispatch = useDispatch()
+
   const [text, setText] = useState('')
 
-  const dispatch = useDispatch()
+  const { character, characterIsError, characterIsSuccess, characterMessage } = useSelector(
+    (state) => state.character
+  )
+
+  if (characterIsError) {
+    toast.error(characterMessage)
+    dispatch(characterReset())
+  }
+
+  // this smells kinda bad. Remember to ask for a better way to do this.
+  if (characterIsSuccess) {
+    dispatch(getFilms(character.name))
+    dispatch(getPlanet(character.name))
+    dispatch(characterSuccessReset())
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
-
     dispatch(getCharacter( text ))
-
-    dispatch(getPlanet( text ))
-    dispatch(getFilms( text ))
-
     setText('')
   }
 

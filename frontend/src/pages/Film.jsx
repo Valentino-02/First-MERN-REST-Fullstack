@@ -13,7 +13,7 @@ function Film() {
     (state) => state.film
   )
   const { characters } = useSelector(
-    (state) => state.character
+    (state) => state.characters
   )
 
   const getCharactersInFilm = (film) => {

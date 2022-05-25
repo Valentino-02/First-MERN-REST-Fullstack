@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CharacterSearch from '../components/CharacterSearch'
+import CharacterInfo from '../components/CharacterInfo'
 import Spinner from '../components/Spinner'
-import { characterReset, getCharacters } from '../features/character/characterSlice'
-import { planetReset } from '../features/planet/planetSlice'
-import { filmReset, setFilm } from '../features/film/filmSlice'
+import { characterReset } from '../features/character/characterSlice'
+
 
 function Character() {
   const navigate = useNavigate()
@@ -14,21 +14,15 @@ function Character() {
   const { user } = useSelector(
     (state) => state.auth
   )
-  const { planet, planetIsLoading } = useSelector(
+  const { planetIsLoading } = useSelector(
     (state) => state.planet
   )
-  const { films, filmIsLoading, } = useSelector(
+  const { filmIsLoading, } = useSelector(
     (state) => state.film
   )
-  const { character, characterIsLoading, characterIsError, characterMessage } = useSelector(
+  const { character, characterIsLoading } = useSelector(
     (state) => state.character
   )
-
-  const onClickFilm = (e, film) => {
-    e.preventDefault()
-    dispatch(setFilm(film))
-    navigate('/film')
-  }
 
   function isEmpty(obj) {
     return Object.keys(obj).length === 0;
@@ -42,12 +36,6 @@ function Character() {
 
   useEffect(() => {
     dispatch(characterReset())
-    dispatch(filmReset())
-    dispatch(planetReset())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getCharacters())
   }, [dispatch])
 
   if (characterIsLoading || planetIsLoading || filmIsLoading) {
@@ -62,34 +50,9 @@ function Character() {
 
       <CharacterSearch />
 
-      <section className='data'>
-        {characterIsError ? (
-          <p>{characterMessage}</p>
-        ) : (
-          <div>
-            <h2>{character.name}</h2>
-            <br></br>
-            <h1> 
-              {!isEmpty(planet) ? (
-                <Link to='/planet'>Planet: {planet.name}</Link>
-              ) : (
-              <></>
-              )}
-            </h1>
-            <br></br>
-            {films.length > 0 ? (
-              <h4>List of Films:</h4>
-            ) : (
-              <></>
-            )}
-            <div> 
-              {films.map((film) => (
-              <button className='btn' onClick={e => {onClickFilm(e, film)}}>{film.title} </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </section>
+      {!isEmpty(character) &&
+      <CharacterInfo />
+      }
     </>
   )
 }

@@ -1,29 +1,40 @@
 const asyncHandler = require('express-async-handler')
-const swapi = require('swapi-node')
+const axios = require('axios')
 const Film = require('../models/filmModel')
+
+const swapiURL = 'https://swapi.dev/api/people/'
 
 // @desc    Get films by character
 // @route   GET api/films/:character
 // @access  Private
 const getFilms = asyncHandler(async (req, res) => {
-    const characterList = await swapi.get('https://swapi.dev/api/people')
     const name = req.params.character
     const films = []
     
-    if (name && !characterList.results.find((result) => result.name===name)) {
+    if (!name) {
         res.status(400)
-        throw new Error('name not found in database')
+        throw new Error('please enter a character name as a param')
     }
 
-    const character = characterList.results.find((result) => result.name===name)
-    const filmLinks = character.films
+    let characters = await axios.get(swapiURL + `?search=${name}`).then((response) => response.data.results)
 
-   for (const link of filmLinks) {
-       let film = await swapi.get(link)
-       films.push(film)
-   }
+    if (characters.length === 0) {
+        res.status(400)
+        throw new Error(`no match for the name: ${name}`)
+    }
+    if (characters.length > 1) {
+        res.status(400)
+        throw new Error(`more than 1 match for the name: ${name}. Try being more specific`)
+    }
 
-   res.status(200).json(films)
+    let filmsURL = characters[0].films
+
+    for (const url of filmsURL) {
+        let film = await axios.get(url).then((response) => response.data)
+        films.push(film)
+    }
+
+    res.status(200).json(films)
 })
 
 module.exports = {

@@ -1,5 +1,4 @@
 const asyncHandler = require('express-async-handler')
-const swapi = require('swapi-node')
 const Favorite = require('../models/favoriteModel')
 
 // @desc    Get favorite characters
