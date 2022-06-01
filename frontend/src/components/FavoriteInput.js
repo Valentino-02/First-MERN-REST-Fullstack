@@ -1,40 +1,45 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createFavorite } from '../features/favorite/favoriteSlice'
+import { toast } from 'react-toastify'
+import { getCharacter, characterReset } from '../features/character/characterSlice'
 
 function FavoriteInput() {
-  const [text, setText] = useState('')
-  const [errorText, setErrorText] = useState('')
+  const dispatch = useDispatch()
 
-  const { characters } = useSelector(
+  const [text, setText] = useState('')
+
+  const { characterIsError, characterIsSuccess, characterMessage } = useSelector(
     (state) => state.character
   )
   const { favorites } = useSelector(
     (state) => state.favorite
   )
 
-  const dispatch = useDispatch()
+
+  if (characterIsError) {
+    toast.error(characterMessage)
+    dispatch(characterReset())
+    setText('')
+  }
+
+  if (characterIsSuccess) {
+    dispatch(createFavorite( {text}))
+    dispatch(characterReset())
+    setText('')
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
 
-    // Remember to rewrite this, so it is cleaner
-    for (const character of characters) {
-      for (const favorite of favorites) {
-        if (favorite.text === text) {
-          setErrorText('Character already in favorites')
-          return
-        }
-
-      }
-      if (character.name === text) {
-        dispatch(createFavorite({ text }))
-        setText('')
-        setErrorText('')
-      } else {
-        setErrorText('Invalid name, please enter a valid name')
-      }
+    for (const favorite of favorites) {
+      if (favorite.text === text) {
+        toast.error('Character already in Favorites')
+        return
+      } 
     }
+
+    dispatch(getCharacter( text ))
   }
 
   return (
@@ -55,7 +60,6 @@ function FavoriteInput() {
             Add Favorite Character
           </button>
         </div>
-        <h4>{errorText}</h4>
       </form>
       <br></br>
     </section>

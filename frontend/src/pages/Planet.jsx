@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { getCharacters } from '../features/character/charactersSlice'
 
 function Planet() {
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ function Planet() {
   const { planet } = useSelector(
     (state) => state.planet
   )
-  const { characters } = useSelector(
+  const { characters, charactersIsLoading } = useSelector(
     (state) => state.characters
   )
 
@@ -26,14 +27,17 @@ function Planet() {
       }
     }
     return out
-    }
+  }
   
-
   useEffect(() => {
     if (!user) {
       navigate('/login')
     }
   }, [user, navigate, dispatch])
+
+  if (characters.length === 0 && !charactersIsLoading) {
+    dispatch(getCharacters())
+  }
 
   return (
     <>

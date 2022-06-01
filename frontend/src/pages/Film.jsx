@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getCharacters } from '../features/character/charactersSlice'
 
 
 function Film() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
  
   const { user } = useSelector(
@@ -12,7 +14,7 @@ function Film() {
   const { film } = useSelector(
     (state) => state.film
   )
-  const { characters } = useSelector(
+  const { characters, charactersIsLoading } = useSelector(
     (state) => state.characters
   )
 
@@ -27,13 +29,18 @@ function Film() {
     }
     return out  
   }
-  
+
   useEffect(() => {
     if (!user) {
       navigate('/login')
     }
   }, [user, navigate])
 
+
+  if (characters.length === 0 && !charactersIsLoading) {
+    dispatch(getCharacters())
+  }
+  
   return (
     <>
       <section className='heading'>
