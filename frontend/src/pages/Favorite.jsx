@@ -1,56 +1,53 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import FavoriteInput from '../components/FavoriteInput'
-import FavoriteItem from '../components/FavoriteItem'
-import Spinner from '../components/Spinner'
-import { getFavorites, reset } from '../features/favorite/favoriteSlice'
-import { getCharacters } from '../features/character/charactersSlice'
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import FavoriteInput from "../components/FavoriteInput";
+import FavoriteItem from "../components/FavoriteItem";
+import Spinner from "../components/Spinner";
+import { getFavorites, reset } from "../features/favorite/favoriteSlice";
+import { getCharacters } from "../features/character/charactersSlice";
 
 function Favorite() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { user } = useSelector(
-    (state) => state.auth
-  )
-  const { favorites, favoriteIsLoading} = useSelector(
+  const { user } = useSelector((state) => state.auth);
+  const { favorites, favoriteIsLoading } = useSelector(
     (state) => state.favorite
-  )
+  );
 
   useEffect(() => {
     if (!user) {
-      navigate('/login')
+      navigate("/login");
     }
 
-    dispatch(getFavorites())
+    dispatch(getFavorites());
 
     return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, dispatch])
+      dispatch(reset());
+    };
+  }, [user, navigate, dispatch]);
 
   useEffect(() => {
-    dispatch(getCharacters())
-  }, [dispatch])
-
+    dispatch(getCharacters());
+  }, [dispatch]);
 
   if (favoriteIsLoading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
     <>
-      <section className='heading'>
+      <section className="heading">
         <h1>Welcome {user.name}</h1>
-        <p>This are your Favorite Characters</p>
+        <p>This are your Favorite Names</p>
       </section>
 
       <FavoriteInput />
 
-      <section className='content'>
+      <section className="content">
         {favorites.length > 0 ? (
-          <div className='favorites'>
+          <div className="favorites">
             {favorites.map((favorite) => (
               <FavoriteItem key={favorite._id} character={favorite} />
             ))}
@@ -60,7 +57,7 @@ function Favorite() {
         )}
       </section>
     </>
-  )
+  );
 }
 
-export default Favorite
+export default Favorite;

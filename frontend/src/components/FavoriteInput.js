@@ -46,7 +46,7 @@ function FavoriteInput() {
     <section className='form'>
       <form onSubmit={onSubmit}>
         <div className='form-group'>
-          <label htmlFor='text'>Add a character</label>
+          <label htmlFor='text'>Add a name</label>
           <input
             type='text'
             name='name'
@@ -57,7 +57,7 @@ function FavoriteInput() {
         </div>
         <div className='form-group'>
           <button className='btn btn-block' type='submit'>
-            Add Favorite Character
+            Add Favorite Character Name
           </button>
         </div>
       </form>
